@@ -35,9 +35,8 @@ EOF
 
 sudo systemctl daemon-reload
 
-# Full restart
+# Full restart (stop and start again due to issues)
 sudo systemctl stop salt-minion || true
 sudo systemctl reset-failed salt-minion || true
 sudo systemctl enable salt-minion
-sudo systemctl restart salt-minion
-
+sudo systemctl start salt-minion
