@@ -25,7 +25,6 @@ HOSTNAME=$(hostname)
 echo "id: $HOSTNAME" | sudo tee -a /etc/salt/minion
 
 # Make systemd-override that cleans old PID-file always before start
-
 sudo mkdir -p /etc/systemd/system/salt-minion.service.d
 cat << 'EOF' | sudo tee /etc/systemd/system/salt-minion.service.d/override.conf
 [Service]
