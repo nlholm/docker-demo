@@ -39,8 +39,11 @@ fi
 sudo apt-get update -y
 sudo apt-get install -y salt-master
 
-# Auto accepting minion-keys
+#######################################
+# Auto accept minion-keys
 # Note: Auto accepting should only be done in test/dev environments, not in production!
+#######################################
+
 grep -qxF "auto_accept: True" /etc/salt/master || echo "auto_accept: True" | sudo tee -a /etc/salt/master
 
 sudo systemctl stop salt-master
