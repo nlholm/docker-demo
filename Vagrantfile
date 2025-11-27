@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
     master.vm.hostname = "master"
     master.vm.network "private_network", ip: "192.168.12.10"
 
-    # Forward load balancer on host (http://localhost:8080)
+    # Forward load balancer port on host (http://localhost:8080)
     master.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
 
     master.vm.provision "shell", path: "scripts/master.sh"
