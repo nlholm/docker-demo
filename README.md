@@ -9,5 +9,4 @@ Run commands:
 
 1. `sudo mkdir -p /srv/salt`
 2. `sudo cp -r docker-demo/salt/* /srv/salt/`
-3. `sudo systemctl restart salt-master`
-4. `sudo salt 'minion1' state.apply`
+3. `sudo salt 'minion1' state.apply`
