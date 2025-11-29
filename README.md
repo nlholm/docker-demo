@@ -126,7 +126,7 @@ Expected output: Salt should return a summary report showing Succeeded: X (where
 
 Result: The background color of the page should cycle between Blue, Pink, and Yellow. This confirms that the Nginx Load Balancer is working correctly and distributing traffic to different backend containers in a Round-Robin fashion.
 
-Alternatively, you can run localhost on the command line either on the master or minion (as the VMs don't have a graphical user interface by deafult):
+Alternatively, you can run localhost on the command line either on the mMster or Minion (as the VMs don't have a graphical user interface by deafult):
 
 Master:
 ```Bash
@@ -161,7 +161,7 @@ docker-demo/
         └── site3/            # Yellow Theme Content
 ```
 
-#### Developer Note: Synced Folders
+### Developer Note: Synced Folders
 
 The provisioning script automatically links the local`salt/` folder to `/srv/salt/` on the Master. This means you can edit files on your host machine (e.g., in VS Code) and simply run `state.apply` on the Master to see changes instantly, without needing to copy files manually.
 
