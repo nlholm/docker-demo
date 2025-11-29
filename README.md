@@ -4,7 +4,9 @@ This project demonstrates an Infrastructure as Code (IaC) environment using Vagr
 
 It automatically provisions a virtual infrastructure where a Salt Master configures a Minion to run a cluster of Nginx web servers behind an Nginx Load Balancer.
 
-This project was created by [punnalathomas](https://github.com/punnalathomas) and [nlholm]/(https://github.com/nlholm) as group work for a configuration management systems course. A report for the process is available at https://github.com/nlholm/docker-demo-documentation.
+This project was created by [punnalathomas](https://github.com/punnalathomas) and [nlholm](https://github.com/nlholm) as group work for a configuration management systems course. A report for the process is available at https://github.com/nlholm/docker-demo-documentation.
+
+![img1](./img/img1.jpeg) 
 
 ## Architecture Overview
 
@@ -63,7 +65,7 @@ git clone https://github.com/nlholm/docker-demo.git
 cd docker-demo
 ```
 
-### Provision the Infrastructure
+### 2. Provision the Infrastructure
 
 Start the virtual machines. We explicitly enforce the VirtualBox provider to ensure correct resource allocation.
 
@@ -124,6 +126,22 @@ Expected output: Salt should return a summary report showing Succeeded: X (where
 
 Result: The background color of the page should cycle between Blue, Pink, and Yellow. This confirms that the Nginx Load Balancer is working correctly and distributing traffic to different backend containers in a Round-Robin fashion.
 
+Alternatively, you can run localhost on the command line either on the master or minion (as the VMs don't have a graphical user interface by deafult):
+
+Master:
+```Bash
+vagrant ssh master
+# Test the IP address for minion1
+curl http://192.168.12.11
+```
+
+Minion:
+```Bash
+vagrant ssh minion1
+# Test the localhost (one of the webservers will answer)
+curl http://localhost
+```
+
 ### Project Structure
 ```Plaintext
 docker-demo/
@@ -160,3 +178,5 @@ In case there is need to copy files manually, do the following:
 **Why are the sites different colors?** In this educational demo, we have intentionally modified the CSS of each container (Blue, Pink, Yellow) to provide a clear visual indication that the load balancer is routing traffic to different instances.
 
 **In a Real Production Environment:** In a real-world scenario, all backend containers would serve identical content. The goal of load balancing in production is to distribute workload, ensure redundancy, and provide high availability, while keeping the user experience consistent regardless of which specific server handles the request.
+
+![img2](./img/img2.png)
