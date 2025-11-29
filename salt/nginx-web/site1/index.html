@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Docker Demo</title>
+    <title>Docker Load Balancing Demo</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -14,7 +14,16 @@
     </header>
 
     <main>
+        <h2>Load Balanced Container</h2>
+
         <p>Welcome to our Docker Demo Homepage!</p>
+
+        <p>This page is served from a Docker container orchestrated by Salt.</p>
+
+        <p>If you refresh the page, the background color should change as the Nginx Load Balancer directs traffic to a
+            different container
+            (Blue, Pink, or Yellow).</p>
+
         <p>
             Brought to you by
             <a href="https://github.com/punnalathomas" target="_blank">Thomas</a> and
@@ -26,7 +35,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2025 Docker Demo</p>
+        <p>Managed with SaltStack | Running on Docker | Proxied by Nginx</p>
     </footer>
 </body>
 

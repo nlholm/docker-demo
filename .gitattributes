@@ -1,0 +1,31 @@
+# Set default behavior to automatic normalization
+* text=auto
+
+# ----------------------------------------------------------------------
+# LINUX / VAGRANT INFRASTRUCTURE FILES
+# ----------------------------------------------------------------------
+# Force LF (Line Feed) line endings for shell scripts.
+# This is critical for Vagrant provisioning on Windows hosts.
+# If these use CRLF, the VM will fail with "/bin/bash^M: bad interpreter".
+*.sh text eol=lf
+
+# Force LF for SaltStack state files and YAML configurations.
+# While YAML parsers are often tolerant, LF is best practice for Linux envs.
+*.sls text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Force LF for Nginx configuration files.
+*.conf text eol=lf
+
+# Force LF for the Vagrantfile (Ruby syntax).
+Vagrantfile text eol=lf
+
+# ----------------------------------------------------------------------
+# WEB CONTENT
+# ----------------------------------------------------------------------
+# Ensure consistent line endings for web assets
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.md text eol=lf

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Load Balancing Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>Docker Demo</h1>
+    </header>
+
+    <main>
+        <h2>Load Balanced Container</h2>
+
+        <p>Welcome to our Docker Demo Homepage!</p>
+
+        <p>This page is served from a Docker container orchestrated by Salt.</p>
+
+        <p>If you refresh the page, the background color should change as the Nginx Load Balancer directs traffic to a
+            different container
+            (Blue, Pink, or Yellow).</p>
+
+        <p>
+            Brought to you by
+            <a href="https://github.com/punnalathomas" target="_blank">Thomas</a> and
+            <a href="https://github.com/nlholm" target="_blank">Niina</a> –
+            with help from friends at Vagrant, Salt, Docker and Nginx.
+        </p>
+
+        <img src="images/demo-image.png" alt="Demo illustration, created with Gemini">
+    </main>
+
+    <footer>
+        <p>Managed with SaltStack | Running on Docker | Proxied by Nginx</p>
+    </footer>
+</body>
+
+</html>

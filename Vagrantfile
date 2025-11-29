@@ -43,7 +43,7 @@ Vagrant.configure("2") do |config|
 
     # Add 1 GB RAM
     minion.vm.provider "virtualbox" do |vb|
-      vb.memory = 1024   # minion1: 1 GB
+      vb.memory = 2048   # minion1: 1 GB
       vb.cpus = 1        # minion1: 1 CPU   
     end
   end

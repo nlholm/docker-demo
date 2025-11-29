@@ -51,4 +51,20 @@ sudo systemctl start salt-master
 
 sudo systemctl enable --now salt-master
 
+#######################################
+# Link vagrant/salt to /srv/salt
+# This allows editing files on the host and seeing changes instantly on the master
+#######################################
+
+# Remove default empty directory if exists
+if [ -d /srv/salt ] && [ ! -L /srv/salt ]; then
+    sudo rm -rf /srv/salt
+fi
+
+# Create symlink if it doesn't exist
+if [ ! -L /srv/salt ]; then
+    echo "[*] Linking /vagrant/salt to /srv/salt"
+    sudo ln -s /vagrant/salt /srv/salt
+fi
+
 echo "[*] Salt master provisioned successfully"
