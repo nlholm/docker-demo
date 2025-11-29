@@ -126,7 +126,7 @@ Expected output: Salt should return a summary report showing Succeeded: X (where
 
 Result: The background color of the page should cycle between Blue, Pink, and Yellow. This confirms that the Nginx Load Balancer is working correctly and distributing traffic to different backend containers in a Round-Robin fashion.
 
-Alternatively, you can run localhost on the command line either on the mMster or Minion (as the VMs don't have a graphical user interface by deafult):
+Alternatively, you can run localhost on the command line either on the Master or Minion (as the VMs don't have a graphical user interface by deafult):
 
 Master:
 ```Bash
