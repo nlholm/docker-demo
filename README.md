@@ -36,8 +36,6 @@ The setup consists of two Virtual Machines running Debian Bookworm:
 
 ---
 
-### Prerequisites
-
 ## Prerequisites & System Requirements
 
 Before running the environment, ensure you have the following software installed on your host machine:
@@ -116,7 +114,7 @@ Expected output: Salt should return a summary report showing Succeeded: X (where
 
 ---
 
-### Verify the Demo
+## Verify the Demo
 
 1. Open your web browser on your host machine.
 
@@ -175,7 +173,7 @@ In case there is need to copy files manually, do the following:
 
 ---
 
-### Note on Production vs. Demo Environment
+## Note on Production vs. Demo Environment
 
 **Why are the sites different colors?** In this educational demo, we have intentionally modified the CSS of each container (Blue, Pink, Yellow) to provide a clear visual indication that the load balancer is routing traffic to different instances.
 
