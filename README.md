@@ -18,7 +18,7 @@ Please note: Unlike the general diagram above, traffic in this demo environment 
 
 The setup consists of two Virtual Machines running Linux Debian Bookworm:
 1.  **Master:** Runs the SaltStack Master service.
-2.  **Minion:** Runs Salt Minion, Docker Engine, the Nginx Reverse Proxy (Load Balancer); and Nginx web servers within Docker containers.
+2.  **Minion:** Runs Salt Minion, Docker Engine, the Nginx Load Balancer (Reverse Proxy); and Nginx web servers within Docker containers.
 
 ### Traffic Flow Diagram
 ```text
