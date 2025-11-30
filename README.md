@@ -147,56 +147,57 @@ curl http://localhost
 ### Project Structure
 ```Plaintext
 docker-demo/
-├── Vagrantfile               # VM definition (Master & Minion)
-├── .gitattributes            # Enforces LF line endings for scripts (for Windows)
-├── scripts/                  # Initial provisioning scripts
-│   ├── master.sh             # Sets up Salt Master & Symlinks /srv/salt
-│   └── minion.sh             # Sets up Salt Minion
-└── salt/                     # SaltStack State Tree
-    ├── top.sls               # State entry point
-    ├── docker/               # Module: Installs Docker Engine
-    ├── nginx-proxy/          # Module: Configures the Load Balancer
-    └── nginx-web/            # Module: Deploys backend containers
+├── Vagrantfile
+├── .gitattributes
+├── scripts/
+│   ├── master.sh
+│   └── minion.sh
+└── salt/
+    ├── top.sls
+    ├── docker/
+    │   └── init.sls
+    ├── nginx-proxy/
+    │   ├── init.sls
+    │   └── nginx.conf
+    └── nginx-web/
+        ├── init.sls
         ├── docker-compose.yml
-        ├── site1/            # Blue Theme Content
-        ├── site2/            # Pink Theme Content
-        └── site3/            # Yellow Theme Content
+        ├── site1/
+        ├── site2/
+        └── site3/
 ```
 
 Project structure - at a glance
 
 ```Plaintext
 docker-demo/
-├── Vagrantfile               # Defines the VM infrastructure (Master & Minion) and port forwarding (Host 8080 -> Guest 80).
-├── .gitattributes            # Enforces LF line endings for scripts (for Windows).
-├── scripts/                  # Shell scripts for initial VM provisioning.
-│   ├── master.sh             # Installs Salt Master and creates a symlink from /vagrant/salt to /srv/salt.
-│   └── minion.sh             # Installs Salt Minion and connects it to the Master.
-└── salt/                     # Main SaltStack configuration directory (synced to the Master).
-    ├── top.sls               # Entry point: Maps state modules to the minion.
-    ├── docker/               # Module: Handles Docker installation.
-    │   └── init.sls          # Installs Docker Engine and adds 'vagrant' user to the docker group.
-    ├── nginx-proxy/          # Module: Handles the Load Balancer.
-    │   ├── init.sls          # Installs Nginx on the host.
-    │   └── nginx.conf        # Nginx configuration: Distributes traffic to ports 8081, 8082, 8083.
-    └── nginx-web/            # Module: Handles the backend web containers.
-        ├── init.sls          # Copies website content (including images) and starts Docker containers.
-        ├── docker-compose.yml# Defines 3 Nginx services (web1, web2, web3) mapped to different site folders.
-        ├── site1/            # Source content for Container 1 (Blue Theme).
+├── Vagrantfile                     # 1. NETWORKING ENTRY: Defines the VM infrastructure (Master & Minion) and maps Host Port 8080 -> Guest (Minion) Port 80.
+├── .gitattributes                  # Enforces LF line endings (for Windows compatibility).
+├── scripts/                        # Shell scripts for initial VM provisioning.
+│   ├── master.sh                   # Provisioning: Installs Salt Master and creates a symlink from /vagrant/salt to /srv/salt.
+│   └── minion.sh                   # Provisioning: Installs Salt Minion and connects it to the Master.
+└── salt/                           # Main SaltStack configuration directory (synced to the Master).
+    ├── top.sls                     # Entry Point: Assigns states to 'minion1'.
+    ├── docker/                     # Module: Handles Docker installation.
+    │   └── init.sls                # State: Installs Docker Engine & adds 'vagrant' user to docker group.
+    ├── nginx-proxy/                # Module: Handles the Load Balancer.
+    │   ├── init.sls                # State: Installs Nginx package on the VM.
+    │   └── nginx.conf              # 2. PROXY CONFIG: Listens on Guest Port 80 (receiving traffic from Host 8080).
+    └── nginx-web/                  # Module: Handles the backend web containers.
+        ├── init.sls                # State: Copies site content & starts Docker Compose (i.e. Docker Containers).
+        ├── docker-compose.yml      # 3. BACKEND CONFIG: Defines services (web1-3). Maps internal ports 8081-8083 -> Container Port 80. Mounts site folders.
+        ├── site1/                  # Source content for Container1 (web1 - Blue Site).
         │   ├── index.html
         │   ├── styles.css
-        │   └── images/       # Subdirectory for media assets.
-        │       └── demo-image.png
-        ├── site2/            # Source content for Container 2 (Pink Theme).
+        │   └── images/
+        ├── site2/                  # Source content for Container2 (web2 - Pink Site).
         │   ├── index.html
         │   ├── styles.css
-        │   └── images/       # Subdirectory for media assets.
-        │       └── demo-image.png
-        └── site3/            # Source content for Container 3 (Yellow Theme).
+        │   └── images/
+        └── site3/                  # Source content for Container3 (web3 - Yellow Site).
             ├── index.html
             ├── styles.css
-            └── images/       # Subdirectory for media assets.
-                └── demo-image.png
+            └── images/
 ```
 
 Project structure - in detail
