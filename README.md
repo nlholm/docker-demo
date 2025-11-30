@@ -1,10 +1,12 @@
-# Docker & SaltStack Load Balancing Demo
+# Docker Demo
+
+## *Docker & SaltStack Load Balancing Demo*
 
 This project demonstrates an Infrastructure as Code (IaC) environment using Vagrant, SaltStack, Docker and Nginx.
 
-It automatically provisions a virtual infrastructure where a Salt Master configures a Minion to run a cluster of Nginx web servers behind an Nginx Load Balancer.
+It automatically and idempotently provisions a virtual infrastructure where a Salt Master configures a Minion to run a cluster of Nginx web servers behind an Nginx Load Balancer.
 
-This project was created by [punnalathomas](https://github.com/punnalathomas) and [nlholm](https://github.com/nlholm) as group work for a configuration management systems course. A report for the creation process is available at https://github.com/nlholm/docker-demo-documentation.
+This project was created by [punnalathomas](https://github.com/punnalathomas) and [nlholm](https://github.com/nlholm) as group work for a configuration management systems course. A report for the creation process is available at [Docker Demo Documentation](https://github.com/nlholm/docker-demo-documentation).
 
 ![img1](./img/img1.jpeg) 
 
@@ -146,7 +148,7 @@ curl http://localhost
 ```Plaintext
 docker-demo/
 ├── Vagrantfile               # VM definition (Master & Minion)
-├── .gitattributes            # Enforces LF line endings for scripts (Critical for Windows)
+├── .gitattributes            # Enforces LF line endings for scripts (for Windows)
 ├── scripts/                  # Initial provisioning scripts
 │   ├── master.sh             # Sets up Salt Master & Symlinks /srv/salt
 │   └── minion.sh             # Sets up Salt Minion
@@ -160,6 +162,44 @@ docker-demo/
         ├── site2/            # Pink Theme Content
         └── site3/            # Yellow Theme Content
 ```
+
+Project structure - at a glance
+
+```Plaintext
+docker-demo/
+├── Vagrantfile               # Defines the VM infrastructure (Master & Minion) and port forwarding (Host 8080 -> Guest 80).
+├── .gitattributes            # Enforces LF line endings for scripts (for Windows).
+├── scripts/                  # Shell scripts for initial VM provisioning.
+│   ├── master.sh             # Installs Salt Master and creates a symlink from /vagrant/salt to /srv/salt.
+│   └── minion.sh             # Installs Salt Minion and connects it to the Master.
+└── salt/                     # Main SaltStack configuration directory (synced to the Master).
+    ├── top.sls               # Entry point: Maps state modules to the minion.
+    ├── docker/               # Module: Handles Docker installation.
+    │   └── init.sls          # Installs Docker Engine and adds 'vagrant' user to the docker group.
+    ├── nginx-proxy/          # Module: Handles the Load Balancer.
+    │   ├── init.sls          # Installs Nginx on the host.
+    │   └── nginx.conf        # Nginx configuration: Distributes traffic to ports 8081, 8082, 8083.
+    └── nginx-web/            # Module: Handles the backend web containers.
+        ├── init.sls          # Copies website content (including images) and starts Docker containers.
+        ├── docker-compose.yml# Defines 3 Nginx services (web1, web2, web3) mapped to different site folders.
+        ├── site1/            # Source content for Container 1 (Blue Theme).
+        │   ├── index.html
+        │   ├── styles.css
+        │   └── images/       # Subdirectory for media assets.
+        │       └── demo-image.png
+        ├── site2/            # Source content for Container 2 (Pink Theme).
+        │   ├── index.html
+        │   ├── styles.css
+        │   └── images/       # Subdirectory for media assets.
+        │       └── demo-image.png
+        └── site3/            # Source content for Container 3 (Yellow Theme).
+            ├── index.html
+            ├── styles.css
+            └── images/       # Subdirectory for media assets.
+                └── demo-image.png
+```
+
+Project structure - in detail
 
 ### Developer Note: Synced Folders
 
