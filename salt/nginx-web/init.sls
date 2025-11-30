@@ -63,5 +63,4 @@ nginx_web_up:
       - file: /home/vagrant/nginx-demo/site2
       - file: /home/vagrant/nginx-demo/site3
       - sls: docker
-    
-    # - unless: "docker ps | grep -q nginx-web1 && docker ps | grep -q nginx-web2 && docker ps | grep -q nginx-web3"
+    - unless: "docker ps | grep -q nginx-web1 && docker ps | grep -q nginx-web2 && docker ps | grep -q nginx-web3"
