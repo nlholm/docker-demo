@@ -1,5 +1,6 @@
 # Set default behavior to automatic normalization
 * text=auto
+.gitattributes text eol=lf
 
 # ----------------------------------------------------------------------
 # LINUX / VAGRANT INFRASTRUCTURE FILES

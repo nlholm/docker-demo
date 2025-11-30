@@ -1,27 +1,48 @@
+# Project: Docker & SaltStack Load Balancing Demo
+# Description: Defines the backend cluster of 3 Nginx web servers.
+# Each service runs an identical Nginx image but serves different static content.
+
 services:
+  # ---------------------------
+  # CONTAINER 1 (Blue Site)
+  # ---------------------------
   web1:
-    image: nginx
+    image: nginx:latest
     container_name: nginx-web1
     ports:
+      # Map Minion's localhost port 8081 to the Container's port 80.
+      # The Load Balancer will direct traffic here.
       - "8081:80"
     volumes:
+      # Mount the 'site1' folder (Blue CSS) to the container's web root.
+      # :ro = Read-Only mode (Security best practice).
       - ./site1:/usr/share/nginx/html:ro
     restart: unless-stopped
 
+  # ---------------------------
+  # CONTAINER 2 (Pink Site)
+  # ---------------------------
   web2:
-    image: nginx
+    image: nginx:latest
     container_name: nginx-web2
     ports:
+      # Map Minion's localhost port 8082 -> Container port 80
       - "8082:80"
     volumes:
+      # Mount the 'site2' folder (Pink CSS)
       - ./site2:/usr/share/nginx/html:ro
     restart: unless-stopped
 
+  # ---------------------------
+  # CONTAINER 3 (Yellow Site)
+  # ---------------------------
   web3:
-    image: nginx
+    image: nginx:latest
     container_name: nginx-web3
     ports:
+      # Map Minion's localhost port 8083 -> Container port 80
       - "8083:80"
     volumes:
+      # Mount the 'site3' folder (Yellow CSS)
       - ./site3:/usr/share/nginx/html:ro
     restart: unless-stopped

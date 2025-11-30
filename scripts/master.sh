@@ -1,18 +1,31 @@
 #!/bin/bash
 set -e
 
+# ----------------------------------------------------------------------
+# Script: master.sh
+# Description: Provisions the Salt Master node.
+#   1. Installs Salt Master dependencies.
+#   2. Configures the official Salt Project repository (Broadcom).
+#   3. Enables 'auto_accept' for easier demo onboarding.
+#   4. Links the /vagrant/salt folder to /srv/salt for host editing.
+# ----------------------------------------------------------------------
+
 echo "[*] Installing Salt master"
 
+# Install basic utilities
 sudo apt-get update -y
 sudo apt-get install -y wget curl gnupg2 git micro tree bash-completion
 
 sudo mkdir -p /etc/apt/keyrings
 
 #######################################
-# Salt keyring — only update if changed
+# Salt Keyring Configuration
+# We compare the new key with the existing one to ensure idempotency.
+# Only overwrite if the key has changed.
 #######################################
 
 TMP_KEY=/tmp/salt-key.pgp
+# Note: SaltStack repo moved to Broadcom recently.
 wget -q -O "$TMP_KEY" \
   https://packages.broadcom.com/artifactory/api/security/keypair/SaltProjectKey/public
 
@@ -22,7 +35,8 @@ if ! cmp -s "$TMP_KEY" /etc/apt/keyrings/salt-archive-keyring.pgp 2>/dev/null; t
 fi
 
 #######################################
-# Salt apt source — write only if changed
+# Salt APT Source Configuration
+# Only update if changed
 #######################################
 
 TMP_SRC=/tmp/salt.sources
@@ -36,32 +50,35 @@ if ! cmp -s "$TMP_SRC" "$DEST_SRC" 2>/dev/null; then
   sudo cp "$TMP_SRC" "$DEST_SRC"
 fi
 
+# Install Master service
 sudo apt-get update -y
 sudo apt-get install -y salt-master
 
 #######################################
-# Auto accept minion-keys
-# Note: Auto accepting should only be done in test/dev environments, not in production!
+# Master Configuration: Auto Accept Minions
+# CRITICAL FOR DEMO: Automatically accepts keys from new minions.
+# WARNING: Do not use this in a production environment!
 #######################################
 
 grep -qxF "auto_accept: True" /etc/salt/master || echo "auto_accept: True" | sudo tee -a /etc/salt/master
 
+# Restart service to apply config
 sudo systemctl stop salt-master
 sudo systemctl start salt-master
-
 sudo systemctl enable --now salt-master
 
 #######################################
-# Link vagrant/salt to /srv/salt
-# This allows editing files on the host and seeing changes instantly on the master
+# Developer Experience: Synced Folders
+# Link /vagrant/salt (synced from Host) to /srv/salt (Salt's default).
+# This allows editing .sls files in the host/VS Code instantly.
 #######################################
 
-# Remove default empty directory if exists
+# Remove default empty directory if it exists and is not a symlink
 if [ -d /srv/salt ] && [ ! -L /srv/salt ]; then
     sudo rm -rf /srv/salt
 fi
 
-# Create symlink if it doesn't exist
+# Create the symlink
 if [ ! -L /srv/salt ]; then
     echo "[*] Linking /vagrant/salt to /srv/salt"
     sudo ln -s /vagrant/salt /srv/salt
