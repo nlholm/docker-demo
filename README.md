@@ -90,7 +90,7 @@ Windows (PowerShell/CMD) / Linux / Mac (Intel):
 vagrant up
 ```
 
-*This process may take a few minutes as it downloads the OS image and runs the initial provisioning scripts.*
+This process may take a few minutes as it downloads the OS image and runs the initial provisioning scripts.
 
 ### 3. Apply Configuration (SaltStack)
 
