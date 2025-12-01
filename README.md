@@ -235,6 +235,8 @@ In case there is a need to copy files manually, do the following:
 3. Copy the salt directory of the cloned repository into the newly created directory: `sudo cp -r docker-demo/salt/* /srv/salt/`.
 4. Apply the Highstate: `sudo salt 'minion1' state.apply`.
 
+Alternatively, you can navigate to /vagrant/salt on the master (i.e. the directory where Vagrant copies content from the project directory on the host) and copy the directory to /srv/salt; this is what the symlink automates. No need to clone the repository in this case.
+
 ---
 
 ## Developer Note: Production vs. Demo Environment
