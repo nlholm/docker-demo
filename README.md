@@ -10,7 +10,7 @@ This project was created by [punnalathomas](https://github.com/punnalathomas) an
 
 ![img1 - created by Gemini](./img/img1.png) 
 
-The basic idea behing load balancing: a load balancer (reverse proxy) stands before a cluster of backend web servers and distrubutes traffic to the servers.
+The basic idea behind load balancing: a load balancer (reverse proxy) stands before a cluster of backend web servers and distributes traffic to the servers.
 
 Please note: Unlike the general diagram above, traffic in this demo environment does not originate from the public Internet. All requests are sent locally from the Host machine (simulating external clients) and directed to the internal Load Balancer.
 
@@ -97,7 +97,7 @@ This process may take a few minutes as it downloads the OS image and runs the in
 
 Once the VMs are running, you need to verify the connection and apply the state configurations.
 
-**Step 1**: SSH into the Mater node
+**Step 1**: SSH into the Master node
 ```Bash
 vagrant ssh master
 ```
@@ -143,7 +143,7 @@ Running the state will take a few minutes on the first time. Expected output: Sa
 
 Result: The background color of the page should cycle between Blue, Pink, and Yellow. This confirms that the Nginx Load Balancer is working correctly and distributing traffic to different backend containers in a Round-Robin fashion.
 
-Alternatively, you can run localhost on the command line either on the Master or on the Minion (as the VMs don't have a graphical user interface by deafult):
+Alternatively, you can make a request to localhost on the command line either on the Master or on the Minion (as the VMs don't have a graphical user interface by default):
 
 Master:
 ```Bash
@@ -159,7 +159,7 @@ vagrant ssh minion1
 curl http://localhost
 ```
 
-You can delete (`vagrant destroy`) and set the virtual machines up again (`vagrant up`) as many times as you wish. Running the command `sudo salt 'minion1' state.apply` will set up the environment in the same manner every time, idempotently. This is Infratructure as Code with One Source of Truth.
+You can delete (`vagrant destroy`) and set the virtual machines up again (`vagrant up`) as many times as you wish. Running the command `sudo salt 'minion1' state.apply` will set up the environment in the same manner every time, idempotently. This is Infrastructure as Code with One Source of Truth.
 
 ---
 
@@ -227,9 +227,9 @@ In addition to this project structure overview, the provisioning and configurati
 
 ## Developer Note: Synced Folders
 
-The provisioning script automatically links the local`salt/` folder to `/srv/salt/` on the Master. This means you can edit files on your host machine (e.g., in VS Code) and simply run `state.apply` on the Master to see changes instantly, without needing to copy files manually.
+The provisioning script automatically links the local `salt/` folder to `/srv/salt/` on the Master. This means you can edit files on your host machine (e.g., in VS Code) and simply run `state.apply` on the Master to see changes instantly, without needing to copy files manually.
 
-In case there is need to copy files manually, do the following:
+In case there is a need to copy files manually, do the following:
 1. Clone the repository onto your Master node.
 2. Create a directory for Salt modules:	`sudo mkdir -p /srv/salt`.
 3. Copy the salt directory of the cloned repository into the newly created directory: `sudo cp -r docker-demo/salt/* /srv/salt/`.
