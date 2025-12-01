@@ -42,13 +42,11 @@ The setup consists of two Virtual Machines running Linux Debian Bookworm:
 
 The networking relies on a specific chain of port forwards defined in the configuration files. See [Project Structure](#project-structure) for more details.
 
-1. Host Machine (e.g. Windows): User accesses http://localhost:8080.
-
-2. VirtualBox NAT (Vagrantfile): Forwards traffic from Host:8080 to Minion VM:80.
-
-3. Minion VM (nginx.conf): Nginx Proxy listens on Port 80.
-
-4. Docker Internal (docker-compose.yml): Nginx Proxy forwards traffic to containers on Ports 8081, 8082, 8083.
+1.  **Host Machine (e.g. Windows):** User accesses `http://localhost:8080`.
+2.  **VirtualBox NAT (`Vagrantfile`):** Forwards traffic from **Host:8080** to **Minion VM:80**.
+3.  **Minion VM (`nginx.conf`):** Nginx Proxy listens on **Port 80**.
+4.  **Load Balancing:** Nginx distributes traffic to the Minion's local ports **8081, 8082, 8083**.
+5.  **Docker Containers (`docker-compose.yml`):** Docker maps these local ports to **Port 80** inside each container.
 
 ---
 
