@@ -37,8 +37,10 @@ The setup consists of two Virtual Machines running Linux Debian Bookworm:
        | (Proxies to localhost:8081)             | (Proxies to localhost:8082)
        v                                         v
 [ DOCKER CONTAINER 1 ]                [ DOCKER CONTAINER 2 ] ...
-   (Blue Site)                           (Pink Site)
+     (nginx-web1)                          (nginx-web2)
  (Docker maps 8081->80)                (Docker maps 8082->80)
+  [ Nginx Web Server ]                  [ Nginx Web Server ]
+   (Serves: Blue Site)                   (Serves: Pink Site)
 ```
 
 ### Port Mapping Explained
