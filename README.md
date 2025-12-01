@@ -30,12 +30,15 @@ The setup consists of two Virtual Machines running Linux Debian Bookworm:
 [ VIRTUAL MACHINE (Minion Node) ]
        |
        |  Nginx Load Balancer (Reverse Proxy)
+       |  (Listens on Port 80)
        |
        +--- DECIDES DESTINATION (Round Robin) ---+
        |                                         |
+       | (Proxies to localhost:8081)             | (Proxies to localhost:8082)
        v                                         v
 [ DOCKER CONTAINER 1 ]                [ DOCKER CONTAINER 2 ] ...
    (Blue Site)                           (Pink Site)
+ (Docker maps 8081->80)                (Docker maps 8082->80)
 ```
 
 ### Port Mapping Explained
