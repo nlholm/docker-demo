@@ -48,8 +48,9 @@ The networking relies on a specific chain of port forwards defined in the config
 1.  **Host Machine (e.g. Windows):** User accesses `http://localhost:8080`.
 2.  **VirtualBox NAT (`Vagrantfile`):** Forwards traffic from **Host:8080** to **Minion VM:80**.
 3.  **Minion VM (`nginx.conf`):** Nginx Proxy listens on **Port 80**.
-4.  **Load Balancing:** Nginx distributes traffic to the Minion's local ports **8081, 8082, 8083**.
+4.  **Load Balancing:** Nginx Load Balancer distributes traffic (via the `upstream` block) to the Minion's local ports **8081, 8082, 8083**.
 5.  **Docker Containers (`docker-compose.yml`):** Docker maps these local ports to **Port 80** inside each container.
+6.  **Container Service:** Inside the container, the Nginx Web Server listens on **Port 80** and serves the static HTML content (from the mounted volume).
 
 ---
 
@@ -93,7 +94,7 @@ vagrant up
 
 This process may take a few minutes as it downloads the OS image and runs the initial provisioning scripts.
 
-### 3. Apply Configuration (SaltStack)
+### 3. Apply the Configuration (SaltStack)
 
 Once the VMs are running, you need to verify the connection and apply the state configurations.
 
