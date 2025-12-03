@@ -2,29 +2,32 @@
 set -e
 
 # ----------------------------------------------------------------------
+# Project: Docker & SaltStack Load Balancing Demo
 # Script: minion.sh
 # Description: Provisions the Salt Minion node.
-#   1. Installs Salt Minion using official repos.
+#   1. Installs Salt Minion using official Broadcom repositories.
 #   2. Configures the minion ID and Master IP.
 #   3. Adds systemd overrides to prevent PID locking issues on restart.
 # ----------------------------------------------------------------------
 
-echo "[*] Installing Salt minion (idempotently)"
+echo "[*] Installing Salt minion"
+
 
 #######################################
-# APT Prerequisites
+# APT Prerequisites and Basic Utilities
 #######################################
 
 sudo apt-get update -y
 sudo apt-get install -y wget curl gnupg2 git micro tree bash-completion
 
-sudo mkdir -p /etc/apt/keyrings
 
 #######################################
 # Salt Keyring Configuration
-# We compare the new key with the existing one to ensure idempotency.
-# Only overwrite if the key has changed.
+# Compares the new key with the existing one to ensure idempotency.
+# Updates the key only if it has changed.
 #######################################
+
+sudo mkdir -p /etc/apt/keyrings
 
 TMP_KEY=/tmp/salt-key.pgp
 wget -q -O "$TMP_KEY" \
@@ -35,9 +38,10 @@ if ! cmp -s "$TMP_KEY" /etc/apt/keyrings/salt-archive-keyring.pgp 2>/dev/null; t
   sudo cp "$TMP_KEY" /etc/apt/keyrings/salt-archive-keyring.pgp
 fi
 
+
 #######################################
 # Salt APT Source Configuration
-# Only update if changed
+# Updates the sources.list entry only if the upstream source file changes.
 #######################################
 
 TMP_SRC=/tmp/salt.sources
@@ -51,13 +55,20 @@ if ! cmp -s "$TMP_SRC" "$DEST_SRC" 2>/dev/null; then
   sudo cp "$TMP_SRC" "$DEST_SRC"
 fi
 
-# Install Minion service
+
+#######################################
+# Install Minion Service
+#######################################
+
+# Update is required to pick up the new Salt repository
 sudo apt-get update -y
 sudo apt-get install -y salt-minion
 
+
 #######################################
 # Minion Configuration
-# Sets the Master IP and Minion ID (hostname), only if changed.
+# Sets the Master IP and Minion ID (hostname).
+# Uses 'cmp' to avoid unnecessary writes to the config file.
 #######################################
 
 MINION_CFG_CONTENT=$(cat <<EOF
@@ -70,6 +81,7 @@ if [[ ! -f /etc/salt/minion ]] || ! echo "$MINION_CFG_CONTENT" | cmp -s - /etc/s
   echo "[*] Updating /etc/salt/minion"
   echo "$MINION_CFG_CONTENT" | sudo tee /etc/salt/minion > /dev/null
 fi
+
 
 #######################################
 # Systemd Override for Reliability
@@ -95,15 +107,16 @@ if [[ ! -f "$OVERRIDE_PATH" ]] || ! cmp -s "$TMP_OVERRIDE" "$OVERRIDE_PATH"; the
   sudo cp "$TMP_OVERRIDE" "$OVERRIDE_PATH"
 fi
 
+
 #######################################
 # Restart Service
-# Safely reset failed states and ensure the service is running.
+# Safely resets failed states and ensures the service is running.
+# Sequence: Stop -> Reset Failed -> Enable -> Start.
 #######################################
 
 sudo systemctl daemon-reload
 sudo systemctl stop salt-minion || true
 sudo systemctl reset-failed salt-minion || true
-sudo systemctl enable salt-minion
-sudo systemctl start salt-minion
+sudo systemctl enable --now salt-minion
 
 echo "[*] Salt minion provisioned idempotently"

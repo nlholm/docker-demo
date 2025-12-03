@@ -2,30 +2,34 @@
 set -e
 
 # ----------------------------------------------------------------------
+# Project: Docker & SaltStack Load Balancing Demo
 # Script: master.sh
 # Description: Provisions the Salt Master node.
-#   1. Installs Salt Master dependencies.
-#   2. Configures the official Salt Project repository (Broadcom).
-#   3. Enables 'auto_accept' for easier demo onboarding.
-#   4. Links the /vagrant/salt folder to /srv/salt for host editing.
+#   1. Installs Salt Master using official Broadcom repositories.
+#   2. Configures 'auto_accept' for seamless demo onboarding.
+#   3. Links /vagrant/salt to /srv/salt for host-based editing.
 # ----------------------------------------------------------------------
 
-echo "[*] Installing Salt master"
+echo "[*] Installing Salt master (idempotently)"
 
-# Install basic utilities
+
+#######################################
+# APT Prerequisites and Basic Utilities
+#######################################
+
 sudo apt-get update -y
 sudo apt-get install -y wget curl gnupg2 git micro tree bash-completion
 
-sudo mkdir -p /etc/apt/keyrings
 
 #######################################
 # Salt Keyring Configuration
-# We compare the new key with the existing one to ensure idempotency.
-# Only overwrite if the key has changed.
+# Compares the new key with the existing one to ensure idempotency.
+# Updates the key only if it has changed.
 #######################################
 
+sudo mkdir -p /etc/apt/keyrings
+
 TMP_KEY=/tmp/salt-key.pgp
-# Note: SaltStack repo moved to Broadcom recently.
 wget -q -O "$TMP_KEY" \
   https://packages.broadcom.com/artifactory/api/security/keypair/SaltProjectKey/public
 
@@ -34,9 +38,10 @@ if ! cmp -s "$TMP_KEY" /etc/apt/keyrings/salt-archive-keyring.pgp 2>/dev/null; t
   sudo cp "$TMP_KEY" /etc/apt/keyrings/salt-archive-keyring.pgp
 fi
 
+
 #######################################
 # Salt APT Source Configuration
-# Only update if changed
+# Updates the sources.list entry only if the upstream source file changes.
 #######################################
 
 TMP_SRC=/tmp/salt.sources
@@ -50,38 +55,57 @@ if ! cmp -s "$TMP_SRC" "$DEST_SRC" 2>/dev/null; then
   sudo cp "$TMP_SRC" "$DEST_SRC"
 fi
 
-# Install Master service
+
+#######################################
+# Install Master Service
+#######################################
+
+# Update is required to pick up the new Salt repository
 sudo apt-get update -y
 sudo apt-get install -y salt-master
 
+
 #######################################
-# Master Configuration: Auto Accept Minions
-# CRITICAL FOR DEMO: Automatically accepts keys from new minions.
-# WARNING: Do not use this in a production environment!
+# Master Configuration: Auto Accept
+# Automatically accepts keys from new minions.
+# CRITICAL: This is for DEMO environments only. Do not use in production.
 #######################################
 
-grep -qxF "auto_accept: True" /etc/salt/master || echo "auto_accept: True" | sudo tee -a /etc/salt/master
+if grep -qxF "auto_accept: True" /etc/salt/master; then
+  : # Config already exists, do nothing
+else
+  echo "[*] Enabling auto_accept"
+  echo "auto_accept: True" | sudo tee -a /etc/salt/master > /dev/null
+fi
 
-# Restart service to apply config
-sudo systemctl stop salt-master
-sudo systemctl start salt-master
-sudo systemctl enable --now salt-master
 
 #######################################
 # Developer Experience: Synced Folders
-# Link /vagrant/salt (synced from Host) to /srv/salt (Salt's default).
-# This allows editing .sls files in the host/VS Code instantly.
+# Links /vagrant/salt (synced from Host) to /srv/salt (Salt's default).
+# Allows editing .sls files in VS Code on the host machine.
 #######################################
 
 # Remove default empty directory if it exists and is not a symlink
 if [ -d /srv/salt ] && [ ! -L /srv/salt ]; then
-    sudo rm -rf /srv/salt
+  sudo rm -rf /srv/salt
 fi
 
-# Create the symlink
+# Create the symlink if it doesn't exist
 if [ ! -L /srv/salt ]; then
-    echo "[*] Linking /vagrant/salt to /srv/salt"
-    sudo ln -s /vagrant/salt /srv/salt
+  echo "[*] Linking /vagrant/salt to /srv/salt"
+  sudo ln -s /vagrant/salt /srv/salt
 fi
 
-echo "[*] Salt master provisioned successfully"
+
+#######################################
+# Restart Service
+# Safely resets failed states and ensures the service is running.
+# Sequence: Stop -> Reset Failed -> Enable -> Start.
+#######################################
+
+sudo systemctl daemon-reload
+sudo systemctl stop salt-master || true
+sudo systemctl reset-failed salt-master || true
+sudo systemctl enable --now salt-master
+
+echo "[*] Salt master provisioned idempotently"
