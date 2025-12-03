@@ -9,7 +9,7 @@ docker_dependencies:
 # Create directory for apt keyrings
 /etc/apt/keyrings:
   file.directory:
-    - mode: 0755
+    - mode: '0755'
 
 # Download Docker's official GPG key
 docker_gpg_key:

@@ -7,7 +7,7 @@ include:
   file.directory:
     - user: vagrant
     - group: vagrant
-    - mode: 755
+    - mode: '0755'
 
 # Copy the docker-compose configuration file
 /home/vagrant/nginx-demo/docker-compose.yml:
@@ -15,7 +15,7 @@ include:
     - source: salt://nginx-web/docker-compose.yml
     - user: vagrant
     - group: vagrant
-    - mode: 644
+    - mode: '0644'
     - require:
       - file: /home/vagrant/nginx-demo
 
@@ -25,8 +25,8 @@ include:
     - source: salt://nginx-web/site1
     - user: vagrant
     - group: vagrant
-    - file_mode: 644
-    - dir_mode: 755
+    - file_mode: '0644'
+    - dir_mode: '0755'
     - require:
       - file: /home/vagrant/nginx-demo
 
@@ -36,8 +36,8 @@ include:
     - source: salt://nginx-web/site2
     - user: vagrant
     - group: vagrant
-    - file_mode: 644
-    - dir_mode: 755
+    - file_mode: '0644'
+    - dir_mode: '0755'
     - require:
       - file: /home/vagrant/nginx-demo
 
@@ -47,8 +47,8 @@ include:
     - source: salt://nginx-web/site3
     - user: vagrant
     - group: vagrant
-    - file_mode: 644
-    - dir_mode: 755
+    - file_mode: '0644'
+    - dir_mode: '0755'
     - require:
       - file: /home/vagrant/nginx-demo
 

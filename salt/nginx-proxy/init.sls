@@ -9,7 +9,7 @@ nginx_pkg:
     - source: salt://nginx-proxy/nginx.conf
     - user: root
     - group: root
-    - mode: 644
+    - mode: '0644'
     - require:
       - pkg: nginx_pkg
 
