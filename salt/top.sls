@@ -1,4 +1,5 @@
 # ----------------------------------------------------------------------
+# Project: Docker & SaltStack Load Balancing Demo
 # File: top.sls
 # Description: The entry point for SaltStack configuration.
 #   This file maps state modules to specific minions.
