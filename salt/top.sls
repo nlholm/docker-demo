@@ -1,9 +1,3 @@
-base:
-  '*':
-    - docker
-    - nginx-web
-    - nginx-proxy
-
 # ----------------------------------------------------------------------
 # File: top.sls
 # Description: The entry point for SaltStack configuration.
@@ -11,12 +5,25 @@ base:
 #   Running 'state.apply' triggers this Highstate.
 # ----------------------------------------------------------------------
 
-# base:
-# Target: All minions ('*') In this demo environment, this targets 'minion1'.
-# '*':
-# 1. INFRASTRUCTURE LAYER
-# - docker. Installs Docker Engine dependencies and service.
-# 2. APPLICATION LAYER (Backend)
-# - nginx-web. Sets up the 3 Nginx containers (Blue, Pink, Yellow) via Docker Compose.
-# 3. ROUTING LAYER (Frontend)
-# - nginx-proxy. Installs and configures the Nginx Reverse Proxy / Load Balancer.
+base:
+  # Target: All minions.
+  # The asterisk '*' matches any minion ID (in this demo: 'minion1').
+  '*':
+    
+    # ------------------------------------------------------------------
+    # 1. INFRASTRUCTURE LAYER
+    # ------------------------------------------------------------------
+    # Installs Docker Engine, dependencies, and manages the docker group.
+    - docker
+
+    # ------------------------------------------------------------------
+    # 2. APPLICATION LAYER (Backend)
+    # ------------------------------------------------------------------
+    # Sets up the content and starts the 3 Nginx containers (Blue, Pink, Yellow) using Docker Compose.
+    - nginx-web
+
+    # ------------------------------------------------------------------
+    # 3. ROUTING LAYER (Frontend)
+    # ------------------------------------------------------------------
+    # Installs Nginx on the host to act as a Reverse Proxy & Load Balancer.
+    - nginx-proxy
