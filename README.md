@@ -125,7 +125,7 @@ minion1:
     True
 ```
 
-**Step 3**: Apply the Highstate: Run the following command to trigger Docker installation and container deployment:
+**Step 3**: Apply the Highstate: run the following command to trigger Docker installation and container deployment:
 ```Bash 
 sudo salt 'minion1' state.apply
 ```
